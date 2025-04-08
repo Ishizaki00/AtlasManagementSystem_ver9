@@ -22,5 +22,8 @@ class SubjectsTableSeeder extends Seeder
             ['subject' => '数学'],
             ['subject' => '英語'],
         ]);
+        // foreach ($subjects as $subject) {
+        //     Subject::create(['subject' => $subject]);
+        // }
     }
 }

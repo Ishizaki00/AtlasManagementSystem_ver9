@@ -25,6 +25,6 @@ class UsersTableSeeder extends Seeder
         'birth_day' => '1998-01-06',
          'role' => '1',
         'password' => bcrypt('zef2efn7'), // ハッシュ化されたパスワード
-    ]);
+        ]);
     }
 }

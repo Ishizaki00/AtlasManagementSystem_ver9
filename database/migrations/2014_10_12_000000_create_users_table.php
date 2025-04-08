@@ -27,6 +27,8 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps(); // created_at と updated_at を自動で追加
             $table->softDeletes()->comment('削除日時'); // deleted_at を自動で追加
+            $table->foreignId('subject_id')->nullable()->constrained('subjects')->onDelete('cascade')->comment('科目ID'); //追記
+
         });
     }
 
