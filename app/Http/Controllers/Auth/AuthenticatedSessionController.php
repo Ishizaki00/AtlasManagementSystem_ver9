@@ -26,15 +26,30 @@ class AuthenticatedSessionController extends Controller
      * @param  \App\Http\Requests\Auth\LoginRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
+    // public function store(LoginRequest $request)
+    // {
+    //     $userdata = $request -> only('mail_address', 'password');
+    //     if (Auth::attempt($userdata)) {
+    //         return redirect('top');
+    //     }else{
+    //         return redirect('login')->with('flash_message', 'name or password is incorrect');
+    //     }
+    // }
     public function store(LoginRequest $request)
-    {
-        $userdata = $request -> only('mail_address', 'password');
-        if (Auth::attempt($userdata)) {
-            return redirect('top');
-        }else{
-            return redirect('login')->with('flash_message', 'name or password is incorrect');
-        }
+{
+    // LoginRequestがバリデーションを通過した場合、すでに値が$validatedに格納されている
+    $userdata = $request->only('mail_address', 'password'); // mail_addressとpasswordを取り出す
+
+    // 認証処理
+    if (Auth::attempt($userdata)) {
+        return redirect()->route('top.show'); // topページにリダイレクト
+    } else {
+        return redirect()->route('login')
+            ->withErrors(['email' => 'メールアドレスまたはパスワードが正しくありません。'])
+            ->withInput(); // エラーと入力内容を持ってリダイレクト
     }
+}
+
 
     /**
      * Destroy an authenticated session.
