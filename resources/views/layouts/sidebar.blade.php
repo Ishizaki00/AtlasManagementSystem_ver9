@@ -19,7 +19,7 @@
     </head>
     <body class="all_content">
         <div class="d-flex">
-            <div class="sidebar">
+            <!-- <div class="sidebar">
                 <p><a href="{{ route('top.show') }}">トップ</a></p>
                 <p><a href="/logout">ログアウト</a></p>
                 <p><a href="{{ route('calendar.general.show',['user_id' => Auth::id()]) }}">スクール予約</a></p>
@@ -27,7 +27,23 @@
                 <p><a href="{{ route('calendar.admin.setting',['user_id' => Auth::id()]) }}">スクール枠登録</a></p>
                 <p><a href="{{ route('post.show') }}">掲示板</a></p>
                 <p><a href="{{ route('user.show') }}">ユーザー検索</a></p>
+            </div> -->
+            <div class="sidebar">
+                <p><a href="{{ route('top.show') }}">トップ</a></p>
+                <p><a href="/logout">ログアウト</a></p>
+                <p><a href="{{ route('calendar.general.show',['user_id' => Auth::id()]) }}">スクール予約</a></p>
+
+            <!-- 役職が 1, 2, 3 の場合のみ表示される項目 -->
+                @if(in_array(Auth::user()->role, [1, 2, 3])) <!-- 1, 2, 3 のいずれかの場合 -->
+                <p><a href="{{ route('calendar.admin.show',['user_id' => Auth::id()]) }}">スクール予約確認</a></p>
+                <p><a href="{{ route('calendar.admin.setting',['user_id' => Auth::id()]) }}">スクール枠登録</a></p>
+                @endif
+
+                <p><a href="{{ route('post.show') }}">掲示板</a></p>
+                <p><a href="{{ route('user.show') }}">ユーザー検索</a></p>
             </div>
+
+
             <div class="main-container">
                 {{ $slot }}
             </div>
