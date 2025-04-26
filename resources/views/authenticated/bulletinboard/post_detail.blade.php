@@ -6,13 +6,28 @@
         <div class="detail_inner_head">
           <div>
           </div>
-          <div>
+          <!-- <div>
             <span class="edit-modal-open" post_title="{{ $post->post_title }}" post_body="{{ $post->post }}" post_id="{{ $post->id }}">編集</span>
             <a href="{{ route('post.delete', ['id' => $post->id]) }}">削除</a>
+          </div> -->
+          <div>
+            @if(Auth::id() === $post->user_id)
+              <span class="edit-modal-open"
+                post_title="{{ $post->post_title }}"
+                post_body="{{ $post->post }}"
+                post_id="{{ $post->id }}">編集</span>
+              <!-- <a href="{{ route('post.delete', ['id' => $post->id]) }} ">削除</a> -->
+              <a href="{{ route('post.delete', ['id' => $post->id]) }}" class="text-danger ml-3" onclick="return confirm('この投稿を削除します。よろしいですか？')">削除</a>
+            @endif
           </div>
+
         </div>
 
         <div class="contributor d-flex">
+            @error('post_title')
+              <div class="text-danger mb-1">{{ $message }}</div>
+            @enderror
+
           <p>
             <span>{{ $post->user->over_name }}</span>
             <span>{{ $post->user->under_name }}</span>
@@ -21,6 +36,10 @@
           <span class="ml-5">{{ $post->created_at }}</span>
         </div>
         <div class="detsail_post_title">{{ $post->post_title }}</div>
+                      @if($errors->first('post_body'))
+      <span class="error_message">{{ $errors->first('post_body') }}</span>
+      @endif
+
         <div class="mt-3 detsail_post">{{ $post->post }}</div>
       </div>
       <div class="p-3">
@@ -42,6 +61,10 @@
   <div class="w-50 p-3">
     <div class="comment_container border m-5">
       <div class="comment_area p-3">
+        @error('comment')
+    <div class="alert alert-danger">{{ $message }}</div>
+@enderror
+
         <p class="m-0">コメントする</p>
         <textarea class="w-100" name="comment" form="commentRequest"></textarea>
         <input type="hidden" name="post_id" form="commentRequest" value="{{ $post->id }}">
@@ -57,9 +80,19 @@
     <form action="{{ route('post.edit') }}" method="post">
       <div class="w-100">
         <div class="modal-inner-title w-50 m-auto">
+
+          <!-- バリデーションメッセージ -->
+            @error('post_title')
+              <div class="text-danger mb-1">{{ $message }}</div>
+            @enderror
           <input type="text" name="post_title" placeholder="タイトル" class="w-100">
         </div>
         <div class="modal-inner-body w-50 m-auto pt-3 pb-3">
+
+          <!-- バリデーションメッセージ -->
+          @error('post_body')
+            <div class="text-danger mb-1">{{ $message }}</div>
+          @enderror
           <textarea placeholder="投稿内容" name="post_body" class="w-100"></textarea>
         </div>
         <div class="w-50 m-auto edit-modal-btn d-flex">

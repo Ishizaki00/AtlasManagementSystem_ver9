@@ -56,6 +56,8 @@ Route::group(['middleware' => 'auth'], function(){
             Route::post('comment/create', [PostsController::class, 'commentCreate'])->name('comment.create');
             Route::post('like/post/{id}', [PostsController::class, 'postLike'])->name('post.like');
             Route::post('unlike/post/{id}', [PostsController::class, 'postUnLike'])->name('post.unlike');
+            Route::post('bulletin_board/update', [PostsController::class, 'postUpdate'])->name('post.update');
+
         });
         Route::namespace('Users')->group(function(){
             Route::get('show/users', [UsersController::class, 'showUsers'])->name('user.show');

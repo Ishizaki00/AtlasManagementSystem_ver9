@@ -58,6 +58,20 @@ class PostsController extends Controller
     }
 
     public function postEdit(Request $request){
+        // バリデーションの追加
+            $request->validate([
+                'post_title' => ['required', 'string', 'max:100'],
+                'post_body' => ['required', 'string', 'max:2000'],
+            ], [
+                'post_title.required' => 'タイトルは必須項目です。',
+                'post_title.string' => 'タイトルは文字列で入力してください。',
+                'post_title.max' => 'タイトルは100文字以内で入力してください。',
+                'post_body.required' => '投稿内容は必須項目です。',
+                'post_body.string' => '投稿内容は文字列で入力してください。',
+                'post_body.max' => '投稿内容は2000文字以内で入力してください。',
+            ]);
+
+        //投稿の更新
         Post::where('id', $request->post_id)->update([
             'post_title' => $request->post_title,
             'post' => $request->post_body,
@@ -75,6 +89,14 @@ class PostsController extends Controller
     }
 
     public function commentCreate(Request $request){
+        $request->validate([
+            'comment' => ['required', 'string', 'max:250'],
+        ], [
+            'comment.required' => 'コメントは必須項目です。',
+            'comment.string' => 'コメントは文字列で入力してください。',
+            'comment.max' => 'コメントは250文字以内で入力してください。',
+        ]);
+
         PostComment::create([
             'post_id' => $request->post_id,
             'user_id' => Auth::id(),

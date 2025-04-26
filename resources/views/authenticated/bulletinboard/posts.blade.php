@@ -2,15 +2,12 @@
 <div class="board_area w-100 border m-auto d-flex">
   <div class="post_view w-75 mt-5">
     <p class="w-75 m-auto">投稿一覧</p>
-    @foreach($posts as $post)
+    <!-- @foreach($posts as $post)
     <div class="post_area border w-75 m-auto p-3">
       <p><span>{{ $post->user->over_name }}</span><span class="ml-3">{{ $post->user->under_name }}</span>さん</p>
       <p><a href="{{ route('post.detail', ['id' => $post->id]) }}">{{ $post->post_title }}</a></p>
 
-      <!-- 投稿編集 -->
-      @if (Auth::id() === $post->user_id)
-        <a href="{{ route('post.edit', ['id' => $post->id]) }}" class="btn btn-sm btn-primary">編集</a>
-      @endif
+
 
       <div class="post_bottom_area d-flex">
         <div class="d-flex post_status">
@@ -27,7 +24,46 @@
         </div>
       </div>
     </div>
-    @endforeach
+    @endforeach -->
+    @foreach($posts as $post)
+  <div class="post_area border w-75 m-auto p-3">
+    <p>
+      <span>{{ $post->user->over_name }}</span>
+      <span class="ml-3">{{ $post->user->under_name }}</span>さん
+    </p>
+    <p>
+      <a href="{{ route('post.detail', ['id' => $post->id]) }}">{{ $post->post_title }}</a>
+    </p>
+
+    <div class="post_bottom_area d-flex">
+      <div class="d-flex post_status">
+
+        <!-- コメント数 -->
+        <div class="mr-5">
+          <i class="fa fa-comment"></i>
+          <span>{{ $post->postComments->count() }}</span>
+        </div>
+
+        <!-- いいね -->
+        <div>
+          @if(Auth::user()->is_Like($post->id))
+            <p class="m-0">
+              <i class="fas fa-heart text-danger un_like_btn" post_id="{{ $post->id }}"></i>
+              <span class="like_counts{{ $post->id }}">{{ $post->likes->count() }}</span>
+            </p>
+          @else
+            <p class="m-0">
+              <i class="fas fa-heart like_btn" post_id="{{ $post->id }}"></i>
+              <span class="like_counts{{ $post->id }}">{{ $post->likes->count() }}</span>
+            </p>
+          @endif
+        </div>
+
+      </div>
+    </div>
+  </div>
+@endforeach
+
   </div>
   <div class="other_area border w-25">
     <div class="border m-4">
@@ -49,7 +85,7 @@
 </div>
 
 <!-- 投稿編集モーダル -->
- <div class="modal fade" id="editPostModal" tabindex="-1" role="dialog" aria-labelledby="editPostModalLabel" aria-hidden="true">
+ <!-- <div class="modal fade" id="editPostModal" tabindex="-1" role="dialog" aria-labelledby="editPostModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <form method="POST" action="{{ route('post.update', ['id' => '__ID__']) }}" id="editPostForm">
       @csrf
@@ -75,6 +111,43 @@
       </div>
     </form>
   </div>
+</div> -->
+<!-- 投稿編集モーダル -->
+<!-- 投稿編集モーダル -->
+<div class="modal fade" id="editPostModal" tabindex="-1" role="dialog" aria-labelledby="editPostModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <form method="POST" action="{{ route('post.edit') }}">
+        @csrf
+        <input type="hidden" name="post_id" id="edit-post-id">
+
+        <div class="modal-header">
+          <h5 class="modal-title" id="editPostModalLabel">投稿の編集</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="閉じる">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="edit-post-title">タイトル</label>
+            <input type="text" name="post_title" id="edit-post-title" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="edit-post-body">本文</label>
+            <textarea name="post_body" id="edit-post-body" class="form-control" rows="5"></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">保存</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">キャンセル</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>
+
 
 </x-sidebar>
