@@ -62,8 +62,8 @@
     <div class="comment_container border m-5">
       <div class="comment_area p-3">
         @error('comment')
-    <div class="alert alert-danger">{{ $message }}</div>
-@enderror
+          <div class="alert alert-danger">{{ $message }}</div>
+        @enderror
 
         <p class="m-0">コメントする</p>
         <textarea class="w-100" name="comment" form="commentRequest"></textarea>

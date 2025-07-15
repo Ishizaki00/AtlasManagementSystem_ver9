@@ -12,6 +12,7 @@ use App\Models\Posts\Like;
 use App\Models\Users\User;
 use App\Http\Requests\BulletinBoard\PostFormRequest;
 use Auth;
+use Illuminate\Validation\Rule;
 
 class PostsController extends Controller
 {
@@ -143,4 +144,34 @@ class PostsController extends Controller
 
         return response()->json();
     }
+
+    // サブカテゴリー
+public function subCategoryCreate(Request $request)
+{
+    $request->validate([
+        'main_category_id' => ['required', 'integer'], // メインカテゴリがないと困るので
+        'sub_category' => [
+            'required',
+            'string',
+            'max:100',
+            Rule::unique('sub_categories', 'sub_category')->where(function ($query) use ($request) {
+                return $query->where('main_category_id', $request->main_category_id);
+            })
+        ],
+    ], [
+        'main_category_id.required' => 'メインカテゴリーは必須です。',
+        'main_category_id.integer' => 'メインカテゴリーIDが正しくありません。',
+        'sub_category.required' => 'サブカテゴリー名は必須項目です。',
+        'sub_category.string' => 'サブカテゴリー名は文字列で入力してください。',
+        'sub_category.max' => 'サブカテゴリー名は100文字以内で入力してください。',
+        'sub_category.unique' => '同じメインカテゴリー内に同名のサブカテゴリーは登録できません。',
+    ]);
+
+    SubCategory::create([
+        'main_category_id' => $request->main_category_id,
+        'sub_category' => $request->sub_category,
+    ]);
+
+    return redirect()->route('post.input')->with('success', 'サブカテゴリーを追加しました');
+}
 }
