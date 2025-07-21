@@ -55,6 +55,7 @@ class PostsController extends Controller
             'post_title' => $request->post_title,
             'post' => $request->post_body
         ]);
+        $post->subCategories()->attach($request->sub_category_id);
         return redirect()->route('post.show');
     }
 
@@ -84,7 +85,22 @@ class PostsController extends Controller
         Post::findOrFail($id)->delete();
         return redirect()->route('post.show');
     }
-    public function mainCategoryCreate(Request $request){
+    public function mainCategoryCreate(Request $request)
+    {
+        $request->validate([
+            'main_category_name' => [
+                'required',
+                'string',
+                'max:100',
+                Rule::unique('main_categories', 'main_category'),
+            ],
+        ], [
+            'main_category_name.required' => 'メインカテゴリー名は必須項目です。',
+            'main_category_name.string' => 'メインカテゴリー名は文字列で入力してください。',
+            'main_category_name.max' => 'メインカテゴリー名は100文字以内で入力してください。',
+            'main_category_name.unique' => '既に同名のメインカテゴリーが存在します。',
+        ]);
+
         MainCategory::create(['main_category' => $request->main_category_name]);
         return redirect()->route('post.input');
     }
