@@ -43,7 +43,12 @@
       </div>
       <div>
         @if($user->role == 4)
-        <span>選択科目 :</span>
+          <span>選択科目 :</span>
+          @if($user->subjects->isNotEmpty())
+          {{ implode('、', $user->subjects->pluck('subject')->toArray()) }}
+          @else
+          なし
+          @endif
         @endif
       </div>
     </div>
