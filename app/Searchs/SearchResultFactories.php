@@ -27,3 +27,34 @@ class SearchResultFactories{
     }
   }
 }
+class SelectNameDetails {
+    public function resultUsers($keyword, $category, $updown, $gender, $role, $subjects)
+    {
+        $query = User::query()->with('subjects');
+
+        if (!empty($keyword)) {
+            $query->where(function ($q) use ($keyword) {
+                $q->where('over_name', 'like', "%$keyword%")
+                  ->orWhere('under_name', 'like', "%$keyword%")
+                  ->orWhere('over_name_kana', 'like', "%$keyword%")
+                  ->orWhere('under_name_kana', 'like', "%$keyword%");
+            });
+        }
+
+        if (!empty($gender)) {
+            $query->where('sex', $gender);
+        }
+
+        if (!empty($role)) {
+            $query->where('role', $role);
+        }
+
+        if (!empty($subjects)) {
+            $query->whereHas('subjects', function ($q) use ($subjects) {
+                $q->whereIn('subjects.id', $subjects);
+            });
+        }
+
+        return $query->orderBy('id', $updown)->get();
+    }
+}

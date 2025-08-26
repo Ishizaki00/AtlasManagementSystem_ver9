@@ -31,7 +31,7 @@ class SelectIdDetails implements DisplayUsers{
     ->whereHas('subjects', function($q) use ($subjects){
       $q->where('subjects.id', $subjects);
     })
-    ->orderBy('id', $updown)->get();
+    ->orderBy('id', strtolower($updown))->get();
     return $users;
   }
 
