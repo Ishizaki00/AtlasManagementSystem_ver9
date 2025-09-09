@@ -80,6 +80,11 @@ li {
   width: 70%;
 }
 
+.calendar-td.is-past {
+  background-color: #eee; /* 背景を薄いグレー */
+}
+
+
 /* モーダル */
 .modal {
   display: none;
