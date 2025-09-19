@@ -41,9 +41,9 @@ class CalendarView{
         $startDay = $this->carbon->copy()->format("Y-m-01");
         $toDay    = $this->carbon->copy()->format("Y-m-d");
 
-        // 過去日判定（当日は未来扱い）
+        // 過去日判定（当日は過去扱い）
         $ymd    = $day->everyDay();
-        $isPast = Carbon::parse($ymd)->lt(Carbon::today());
+        $isPast = Carbon::parse($ymd)->lte(Carbon::today());
 
         // td クラス
         if($startDay <= $ymd && $toDay >= $ymd){
