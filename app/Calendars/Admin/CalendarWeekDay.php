@@ -30,19 +30,48 @@ class CalendarWeekDay{
     $three_part = ReserveSettings::with('users')->where('setting_reserve', $ymd)->where('setting_part', '3')->first();
 
     $html[] = '<div class="text-left">';
+     // 1部
     if($one_part){
-      $html[] = '<p class="day_part m-0 pt-1">1部</p>';
-    }
-    if($two_part){
-      $html[] = '<p class="day_part m-0 pt-1">2部</p>';
-    }
-    if($three_part){
-      $html[] = '<p class="day_part m-0 pt-1">3部</p>';
-    }
-    $html[] = '</div>';
+        $reserved = $one_part ? $one_part->users->count() : 0;
+        $canReserve = ($one_part->limit_users > 0) && Carbon::parse($ymd)->isFuture();
 
+        if($canReserve){
+            $url = route('calendar.admin.detail', ['date' => $ymd, 'part' => 1]);
+            $html[] = "<p class='day_part m-0 pt-1'><a href='{$url}' class='text-primary'>1部</a> <span class='text-muted'>{$reserved}</span></p>";
+        }else{
+            $html[] = "<p class='day_part m-0 pt-1 text-muted'>1部 {$reserved}</p>";
+        }
+    }
+
+    // 2部
+    if($two_part){
+        $reserved = $two_part ? $two_part->users->count() : 0;
+        $canReserve = ($two_part->limit_users > 0) && Carbon::parse($ymd)->isFuture();
+
+        if($canReserve){
+            $url = route('calendar.admin.detail', ['date' => $ymd, 'part' => 2]);
+            $html[] = "<p class='day_part m-0 pt-1'><a href='{$url}' class='text-primary'>2部</a> <span class='text-muted'>{$reserved}</span></p>";
+        }else{
+            $html[] = "<p class='day_part m-0 pt-1 text-muted'>2部 {$reserved}</p>";
+        }
+    }
+
+    // 3部
+    if($three_part){
+        $reserved = $three_part ? $three_part->users->count() : 0;
+        $canReserve = ($three_part->limit_users > 0) && Carbon::parse($ymd)->isFuture();
+
+        if($canReserve){
+            $url = route('calendar.admin.detail', ['date' => $ymd, 'part' => 3]);
+            $html[] = "<p class='day_part m-0 pt-1'><a href='{$url}' class='text-primary'>3部</a> <span class='text-muted'>{$reserved}</span></p>";
+        }else{
+            $html[] = "<p class='day_part m-0 pt-1 text-muted'>3部 {$reserved}</p>";
+        }
+    }
+
+    $html[] = '</div>';
     return implode("", $html);
-  }
+}
 
 
   function onePartFrame($day){

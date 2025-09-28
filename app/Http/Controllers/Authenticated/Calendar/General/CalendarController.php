@@ -37,6 +37,18 @@ class CalendarController extends Controller
         return redirect()->route('calendar.general.show', ['user_id' => Auth::id()]);
     }
 
+    public function reserveDetail(string $date, int $part)
+{
+    $reservePersons = ReserveSettings::with('users')
+        ->where('setting_reserve', $date)
+        ->where('setting_part', $part)
+        ->get();
+
+    return view('authenticated.calendar.admin.reserve_detail',
+        compact('reservePersons', 'date', 'part'));
+}
+
+
 public function delete(Request $request)
 {
     // バリデーション（パイプライン表記）
